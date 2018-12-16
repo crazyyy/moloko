@@ -21,53 +21,53 @@ $('.bxslider2').bxSlider({
 });
 
 
-window.onload = function () {
-    var scrollUp = document.getElementById('scrollup');
-    scrollUp.onmouseover = function () {
-        scrollUp.style.opacity = 0.3;
-        scrollUp.style.filter = 'alpha(opacity=30)';
-    };
-    scrollUp.onmouseout = function () {
-        scrollUp.style.opacity = 0.5;
-        scrollUp.style.filter = 'alpha(opacity=50)';
-    };
-    scrollUp.onclick = function () {
-        jQuery('html, body').animate({scrollTop: 0}, 500);
-        return false;
-    };
-    window.onscroll = function () {
-        if (window.pageYOffset > 0) {
-            scrollUp.style.display = 'block';
-        } else {
-            scrollUp.style.display = 'none';
-        }
-    };
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 140) {
-            $('.nav-header-menu').addClass("fixed");
-        } else if ($(this).scrollTop() <= 140) {
-            $('.nav-header-menu').removeClass("fixed")
-        }
-    });
-    var lastId, topMenu = $(".nav-header-menu"), topMenuHeight = topMenu.outerHeight() + 15, menuItems = topMenu.find("a"), scrollItems = menuItems.map(function () {
-        var item = $($(this).attr("href"));
-        if (item.length) {
-            return item;
-        }
-    });
-    $(window).scroll(function () {
-        var fromTop = $(this).scrollTop() + topMenuHeight;
-        var cur = scrollItems.map(function () {
-            if ($(this).offset().top < fromTop)return this;
-        });
-        cur = cur[cur.length - 1];
-        var id = cur && cur.length ? cur[0].id : "";
-        if (lastId !== id) {
-            lastId = id;
-            menuItems.parent().removeClass("active").end().filter("[href='#" + id + "']").parent().addClass("active");
-        }
-    });
-};
+// window.onload = function () {
+//     var scrollUp = document.getElementById('scrollup');
+//     scrollUp.onmouseover = function () {
+//         scrollUp.style.opacity = 0.3;
+//         scrollUp.style.filter = 'alpha(opacity=30)';
+//     };
+//     scrollUp.onmouseout = function () {
+//         scrollUp.style.opacity = 0.5;
+//         scrollUp.style.filter = 'alpha(opacity=50)';
+//     };
+//     scrollUp.onclick = function () {
+//         jQuery('html, body').animate({scrollTop: 0}, 500);
+//         return false;
+//     };
+//     window.onscroll = function () {
+//         if (window.pageYOffset > 0) {
+//             scrollUp.style.display = 'block';
+//         } else {
+//             scrollUp.style.display = 'none';
+//         }
+//     };
+//     $(window).scroll(function () {
+//         if ($(this).scrollTop() > 140) {
+//             $('.nav-header-menu').addClass("fixed");
+//         } else if ($(this).scrollTop() <= 140) {
+//             $('.nav-header-menu').removeClass("fixed")
+//         }
+//     });
+//     var lastId, topMenu = $(".nav-header-menu"), topMenuHeight = topMenu.outerHeight() + 15, menuItems = topMenu.find("a"), scrollItems = menuItems.map(function () {
+//         var item = $($(this).attr("href"));
+//         if (item.length) {
+//             return item;
+//         }
+//     });
+//     $(window).scroll(function () {
+//         var fromTop = $(this).scrollTop() + topMenuHeight;
+//         var cur = scrollItems.map(function () {
+//             if ($(this).offset().top < fromTop)return this;
+//         });
+//         cur = cur[cur.length - 1];
+//         var id = cur && cur.length ? cur[0].id : "";
+//         if (lastId !== id) {
+//             lastId = id;
+//             menuItems.parent().removeClass("active").end().filter("[href='#" + id + "']").parent().addClass("active");
+//         }
+//     });
+// };
 $('.call-popup-form_top > a').click(function (event) {
     $(".popup-form_top-js").fadeToggle();
     $(".overlay").fadeToggle();
@@ -178,10 +178,44 @@ $(document).ready(function($) {
       // if user click on product thumbs - open product page
       var $productContainer = $('.list-md-product div');
       $productContainer.click(function(event){
+
         var productID = $(this).attr('data-id');
         var productContentContainer = '#' + productID;
         var productContent = $(productContentContainer).html();
         $modalContainer.html(productContent);
+        $modalContainer.append('<button class="btn-back" data-catid="' + productCategoryID + '">Back to category</button>');
+
+        var currentProductCategoryProductsDataID = $(productContentContainer).attr('data-cat');
+
+        $('div[data-cat=category-1]').each(function(index, el) {
+          var i = 1;
+          $(this).attr('data-current',i)
+          i++;
+          window.maxCurrentProducts = i;
+
+
+
+
+        });
+
+        console.log(window.maxCurrentProducts)
+
+        if ( $(productContentContainer).attr('data-current') > 1 ) {
+          $modalContainer.append('<button class="btn-next" data-gotoproduct="#">Previous Product</button>');
+        } else if ( $(productContentContainer).attr('data-current') < window.maxCurrentProducts ) {
+          $modalContainer.append('<button class="btn-next" data-gotoproduct="#">Next Product</button>');
+
+        }
+
+
+
+        // back to category
+        $('.btn-back').click(function(event) {
+          /* Act on the event */
+          var backCatId = $(this).attr('data-catid');
+          var productCategoryContent = $(productCategoryContentContainer).html();
+          $modalContainer.html(productCategoryContent);
+        });
 
       })
 
